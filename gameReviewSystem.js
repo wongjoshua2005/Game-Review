@@ -42,34 +42,34 @@ app.get("/", (request, response) => {
     response.render("index");
 });
 
-app.get("/apply", (request, response) => {
-    response.render("apply");
+app.get("/review", (request, response) => {
+    
 });
 
-app.post("/processApplication", (request, response) => {
-
-});
-
-app.get("/reviewApplication", (request, response) => {
-    response.render("review");
-});
-
-app.post("/processReviewApplication", async (request, response) => {
+app.post("/processReview", (request, response) => {
 
 });
 
-app.get("/adminGPA", (request, response) => {
+app.get("/listOfReviews", (request, response) => {
 
 });
 
-app.post("/processAdminGPA", async (request, response) => {
+app.post("/processList", async (request, response) => {
 
 });
 
-app.get("/adminRemove", (request, response) => {
+app.get("/searchGame", (request, response) => {
+
 });
 
-app.post("/processAdminRemove", async (request, response) => {
+app.post("/processSearch", async (request, response) => {
+
+});
+
+app.get("/removeReviews", (request, response) => {
+});
+
+app.post("/processRemoval", async (request, response) => {
 
 });
 
