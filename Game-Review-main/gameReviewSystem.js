@@ -143,10 +143,16 @@ app.post("/processSearch", async (request, response) => {
 });
 
 app.get("/removeReviews", (request, response) => {
+    response.render("removeReviews");
 });
 
 app.post("/processRemoval", async (request, response) => {
-
+    try {
+        const results = await client.db(databaseName).collection(collectionName).deleteMany({});
+        response.render("processRemoval", { count: results.deletedCount});
+    } catch (e) {
+        console.error("Error removing all reviews: ", e);
+    }
 });
 
 app.listen(portNumber);
