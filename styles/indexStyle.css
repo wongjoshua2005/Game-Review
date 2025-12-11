@@ -1,0 +1,31 @@
+body {
+    background-color: #050816;
+    color: white;
+}
+
+#mainContainer {
+    border: 0.4rem solid lightblue;
+    border-radius: 1rem;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+#pageTitle, #userAccount {
+    color: green;
+    font-family: "Bitcount Prop Single", system-ui;
+}
+
+#pageTitle {
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+#userAccount {
+    text-decoration: underline;
+}
+
+a:link {
+    color: red;
+}
