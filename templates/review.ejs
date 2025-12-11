@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Game</title>
+    <script>
+		function confirmSubmission() {
+			return confirm("Are you sure you want to submit your game review?\n You will not be able to change it once submitted.");
+		}
+	</script>
+</head>
+<body>
+    <h1>Review a Video Game</h1>
+    <form action=<%- destination %> method="post">
+        <strong>Name: </strong><input type="text" name="name"><br>
+        <strong>Email: </strong><input type="email" name="email"><br>
+        <label><strong>Rating 0-10: </strong><input type="number" name="rating" max=10 min=0 required/></label>
+        <strong>Write Your Review:</strong><br>
+        <textarea name="review" rows="5" cols="40"></textarea><br>
+        <input type="submit" value="Submit Review"> <input type="reset">
+    </form>
+</body>
+</html>
