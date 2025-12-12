@@ -4,15 +4,40 @@ body {
 }
 
 #mainContainer {
-    border: 0.4rem solid lightblue;
+    border: 0.4rem solid #38bdf8;
     border-radius: 1rem;
     margin: 1rem;
     padding: 1rem;
+    background-color: #020617;
 }
 
 #pageTitle, #userAccount {
-    color: green;
+    color: yellow;
     font-family: "Bitcount Prop Single", system-ui;
+}
+
+#userAccount {
+    text-align: center;
+}
+
+#options {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+#options li {
+    margin-bottom: 1rem;
+
+}
+
+#mainImage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    width: 50%;
 }
 
 #pageTitle {
@@ -29,3 +54,8 @@ body {
 a:link {
     color: red;
 }
+
+a:visited {
+    color: purple;
+}
+
