@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/indexStyle.css" />
+  </head>
+  <body>
+    <div id="mainContainer">
+      <h1>Results for "<%= query %>"</h1>
+
+      <% if (games.length === 0) { %>
+      <p>No games found.</p>
+      <% } else { %>
+      <ul>
+        <% games.forEach(game => { %>
+        <li><strong><%= game.name %></strong><br /></li>
+        <% }) %>
+      </ul>
+      <% } %>
+
+      <hr />
+      <a href="/">HOME</a>
+    </div>
+  </body>
+</html>

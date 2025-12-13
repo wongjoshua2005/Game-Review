@@ -8,6 +8,9 @@ const path = require("path");
 // Standard initialization for the port number and reading the apps
 const bodyParser = require("body-parser");
 
+// To install HTTP Client for the API
+const axios = require("axios");
+
 const portNumber = 3000;
 const httpSuccessStatus = 200;
 
@@ -34,13 +37,16 @@ const collectionName = "gameReviews";
 const uri = process.env.MONGO_CONNECTION_STRING;
 const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
 
+// To store API key
+const RAWG_API_KEY = process.env.RAWG_API_KEY;
+
 async function addGameReview(gameData) {
     const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
     try {
         await client.connect();
         const database = client.db(databaseName);
         const collection = database.collection(collectionName);
-        
+
         const result = await collection.insertOne(applicantData);
         return result.insertedId;
     } catch (e) {
@@ -59,7 +65,7 @@ async function findGameByRating(rating) {
         await client.connect();
         const database = client.db(databaseName);
         const collection = database.collection(collectionName);
-        
+
         const ratingNum = parseFloat(rating);
         const results = await collection.find({ Rating: { $gte: ratingNum } }).toArray();
         return results;
@@ -89,14 +95,14 @@ app.post("/processReview", (request, response) => {
     const email = request.body.email;
     const rating = request.body.rating;
     const review = request.body.review;
-    
+
     const gameReview = {
         name: name,
         email: email,
         rating: parseFloat(rating),
         review: review
     };
-    
+
     addGameReview(gameReview).then((id) => {
         const now = new Date();
         const dateString = now.toLocaleString();
@@ -118,17 +124,17 @@ app.get("/listOfReviews", (request, response) => { //Calvin
 
 app.post("/processList", async (request, response) => { //Calvin
     const rating = request.body.RATINGgeq;
-    
+
     findGameByRating(rating).then((games) => {
         let ratingTable = "<table border='1'>";
         ratingTable += "<tr><th>Name</th><th>Rating</th><th>Review</th></tr>";
-        
+
         games.forEach(game => {
             ratingTable += `<tr><td>${game.name}</td><td>${game.rating}</td><td>${game.review}</td></tr>`;
         });
-        
+
         ratingTable += "</table>";
-        
+
         response.render("listReviewsProcess", {
             ratingTable: ratingTable
         });
@@ -138,11 +144,59 @@ app.post("/processList", async (request, response) => { //Calvin
 });
 
 app.get("/searchGame", (request, response) => {
-
+    response.render("searchGame");
 });
 
 app.post("/processSearch", async (request, response) => {
+    try {
+        // To get the user game typed
+        const searchedGame = request.body.search;
 
+        // If the searched game doesn't exist then just return no games
+        if (!searchedGame) {
+            return response.render("searchResults", { query: "", games: [] });
+        }
+
+        // Call the RAWG API
+        const apiResp = await axios.get("https://api.rawg.io/api/games", {
+            params: {
+                key: RAWG_API_KEY,
+                search: searchedGame,
+                page_size: 10
+            }
+        });
+
+        // To retrieve the data from the API result
+        const rawGames = apiResp.data.results;
+
+        // To test it works and retrieve the right data
+        console.log(rawGames);
+
+        // To display the full list of games from the search
+        let games = [];
+
+        // To put the name of each game into the array
+        for (let i = 0; i < rawGames.length; i++) {
+            const game = rawGames[i];
+
+            const name = game.name;
+
+            games.push({
+                name: name
+            });
+        }
+
+        // To display onto the website
+        const variables = {
+            query: searchedGame,
+            games: games
+        }
+
+        response.render("searchResults", variables);
+
+    } catch (error) {
+        console.error("Error fetching games from RAWG API", error);
+    }
 });
 
 app.get("/removeReviews", (request, response) => {
@@ -152,7 +206,7 @@ app.get("/removeReviews", (request, response) => {
 app.post("/processRemoval", async (request, response) => {
     try {
         const results = await client.db(databaseName).collection(collectionName).deleteMany({});
-        response.render("processRemoval", { count: results.deletedCount});
+        response.render("processRemoval", { count: results.deletedCount });
     } catch (e) {
         console.error("Error removing all reviews: ", e);
     }

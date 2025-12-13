@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Search Game</title>
+  </head>
+
+  <body>
+    <h1>Game Randomizer</h1>
+
+    <p>
+      Do you know what game to review? If not, you can click on this button to
+      randomly find a game to write a review about! The more reviews, the
+      better!
+    </p>
+
+    <form action="/processSearch" method="post">
+      <label>
+        Game name:
+        <input type="text" name="search" />
+      </label>
+      <button type="submit">Search</button>
+    </form>
+
+    <hr />
+    <a href="/">HOME</a>
+  </body>
+</html>
