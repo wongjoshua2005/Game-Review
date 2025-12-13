@@ -2,6 +2,7 @@
 const express = require("express");   /* Accessing express module */
 const app = express();  /* app is a request handler function */
 
+
 // To initialize for MongoDB
 const path = require("path");
 
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'styles')));
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "templates"));
 
+
 const databaseName = "CMSC335DB";
 const collectionName = "gameReviews";
 const uri = process.env.MONGO_CONNECTION_STRING;
@@ -47,7 +49,7 @@ async function addGameReview(gameData) {
         const database = client.db(databaseName);
         const collection = database.collection(collectionName);
 
-        const result = await collection.insertOne(applicantData);
+        const result = await collection.insertOne(gameData);
         return result.insertedId;
     } catch (e) {
         console.error(e);
@@ -67,7 +69,7 @@ async function findGameByRating(rating) {
         const collection = database.collection(collectionName);
 
         const ratingNum = parseFloat(rating);
-        const results = await collection.find({ Rating: { $gte: ratingNum } }).toArray();
+        const results = await collection.find({ rating: { $gte: ratingNum } }).toArray();
         return results;
     } catch (e) {
         console.error(e);
@@ -78,17 +80,23 @@ async function findGameByRating(rating) {
     }
 }
 
-// To render the page when first click on the link
-app.get("/", (request, response) => {
-    response.render("index");
-});
+// To include routes to index, review, and list of reviews
+const routes = require("./routes");
+app.use("/", routes);
 
-app.get("/review", (request, response) => {
-    const variables = {
-        destination: `http://localhost:${portNumber}/processReview`
-    }
-    response.render("review", variables);
-});
+// To render the page when first click on the link
+// app.get("/", (request, response) => {
+//     response.render("index");
+// });
+// NOW DONE IN ROUTES.JS ^
+
+// app.get("/review", (request, response) => {
+//     const variables = {
+//         destination: `http://localhost:${portNumber}/processReview`
+//     }
+//     response.render("review", variables);
+// });
+// NOW DONE IN ROUTES.JS ^
 
 app.post("/processReview", (request, response) => {
     const name = request.body.name;
@@ -106,7 +114,7 @@ app.post("/processReview", (request, response) => {
     addGameReview(gameReview).then((id) => {
         const now = new Date();
         const dateString = now.toLocaleString();
-        response.render("applicantComformation", {
+        response.render("reviewConformation", {
             name: name,
             email: email,
             rating: rating,
@@ -118,9 +126,10 @@ app.post("/processReview", (request, response) => {
     });
 });
 
-app.get("/listOfReviews", (request, response) => { //Calvin
-    response.render("listReviews");
-});
+// app.get("/listOfReviews", (request, response) => { //Calvin
+//     response.render("listReviews");
+// });
+// NOW DONE IN ROUTES.JS ^
 
 app.post("/processList", async (request, response) => { //Calvin
     const rating = request.body.RATINGgeq;
