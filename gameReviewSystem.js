@@ -161,19 +161,31 @@ app.post("/processSearch", async (request, response) => {
         // To get the user game typed
         const searchedGame = request.body.search;
 
+        // To get the platform user is interested in
+        const selectedPlatform = request.body.parentPlatform;
+
         // If the searched game doesn't exist then just return no games
-        if (!searchedGame) {
+        if (!searchedGame && !selectedPlatform) {
             return response.render("searchResults", { query: "", games: [] });
         }
 
+        const params = {
+            key: RAWG_API_KEY,
+            page_size: 10
+        };
+
+        // To let RAWG API filter if user entered a game
+        if (searchedGame) {
+            params.search = searchedGame;
+        }
+
+        // To let RAWG API filter based on platform
+        if (selectedPlatform) {
+            params.parent_platforms = selectedPlatform;
+        }
+
         // Call the RAWG API
-        const apiResp = await axios.get("https://api.rawg.io/api/games", {
-            params: {
-                key: RAWG_API_KEY,
-                search: searchedGame,
-                page_size: 10
-            }
-        });
+        const apiResp = await axios.get("https://api.rawg.io/api/games", { params });
 
         // To retrieve the data from the API result
         const rawGames = apiResp.data.results;

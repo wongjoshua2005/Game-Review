@@ -6,19 +6,35 @@
   </head>
 
   <body>
-    <h1>Game Randomizer</h1>
+    <h1>Find a Game</h1>
 
     <p>
-      Do you know what game to review? If not, you can click on this button to
-      randomly find a game to write a review about! The more reviews, the
-      better!
+      Do you know what game to review? If not, you can search for games that you
+      are interested in to learn more and the platforms you're interested in!
     </p>
 
     <form action="/processSearch" method="post">
-      <label>
-        Game name:
+      <fieldset>
+        <legend>Game Name</legend>
         <input type="text" name="search" />
-      </label>
+      </fieldset>
+
+      <br />
+
+      <fieldset>
+        <legend>Platforms</legend>
+
+        <select name="parentPlatform">
+          <option value="">Any</option>
+          <option value="1">PC</option>
+          <option value="2">PlayStation</option>
+          <option value="3">Xbox</option>
+          <option value="7">Nintendo</option>
+        </select>
+      </fieldset>
+
+      <br />
+
       <button type="submit">Search</button>
     </form>
 
