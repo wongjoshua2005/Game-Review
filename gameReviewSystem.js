@@ -52,8 +52,8 @@ async function addGameReview(gameData) {
     try {
         await mongoose.connect(uri);
         await GameReview.create({
-            name: gameData.name,
             email: gameData.email,
+            name: gameData.name,
             rating: gameData.rating,
             review: gameData.review
         });
@@ -73,12 +73,12 @@ async function addGameReview(gameData) {
 }
 
 
-async function findGameByRating(rating) {
+async function findGameByRating(userEmail, rating) {
     // const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
     try {
         await mongoose.connect(uri);
         const ratingNum = parseFloat(rating);
-        const results = await GameReview.find({rating: { $gte: ratingNum }});
+        const results = await GameReview.find({email: userEmail, rating: { $gte: ratingNum }});
         // await client.connect();
         // const database = client.db(databaseName);
         // const collection = database.collection(collectionName);
@@ -121,8 +121,8 @@ app.post("/processReview", (request, response) => {
     const review = request.body.review;
 
     const gameReview = {
-        name: name,
         email: email,
+        name: name,
         rating: parseFloat(rating),
         review: review
     };
@@ -131,8 +131,8 @@ app.post("/processReview", (request, response) => {
         const now = new Date();
         const dateString = now.toLocaleString();
         response.render("reviewConformation", {
-            name: name,
             email: email,
+            name: name,
             rating: rating,
             review: review,
             date: dateString
@@ -148,11 +148,12 @@ app.post("/processReview", (request, response) => {
 // NOW DONE IN ROUTES.JS ^
 
 app.post("/processList", async (request, response) => { //Calvin
+    const email = request.body.userEmail;
     const rating = request.body.RATINGgeq;
 
-    findGameByRating(rating).then((games) => {
+    findGameByRating(email, rating).then((games) => {
         let ratingTable = "<table border='1'>";
-        ratingTable += "<tr><th>Name</th><th>Rating</th><th>Review</th></tr>";
+        ratingTable += "<tr><th>Game</th><th>Rating</th><th>Review</th></tr>";
 
         games.forEach(game => {
             ratingTable += `<tr><td>${game.name}</td><td>${game.rating}</td><td>${game.review}</td></tr>`;
@@ -161,6 +162,7 @@ app.post("/processList", async (request, response) => { //Calvin
         ratingTable += "</table>";
 
         response.render("listReviewsProcess", {
+            email: email,
             ratingTable: ratingTable
         });
     }).catch((err) => {
