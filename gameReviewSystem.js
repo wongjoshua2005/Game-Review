@@ -2,9 +2,11 @@
 const express = require("express");   /* Accessing express module */
 const app = express();  /* app is a request handler function */
 
-
 // To initialize for MongoDB
 const path = require("path");
+
+// To initialize Mongoose
+const mongoose = require("mongoose");
 
 // Standard initialization for the port number and reading the apps
 const bodyParser = require("body-parser");
@@ -42,15 +44,25 @@ const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
 // To store API key
 const RAWG_API_KEY = process.env.RAWG_API_KEY;
 
-async function addGameReview(gameData) {
-    const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
-    try {
-        await client.connect();
-        const database = client.db(databaseName);
-        const collection = database.collection(collectionName);
+// model for game reviews (mongoose)
+const GameReview = require("./models/GameReview.js");
 
-        const result = await collection.insertOne(gameData);
-        return result.insertedId;
+async function addGameReview(gameData) {
+    // const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
+    try {
+        await mongoose.connect(uri);
+        await GameReview.create({
+            name: gameData.name,
+            email: gameData.email,
+            rating: gameData.rating,
+            review: gameData.review
+        });
+        // await client.connect();
+        // const database = client.db(databaseName);
+        // const collection = database.collection(collectionName);
+
+        // const result = await collection.insertOne(gameData);
+        // return result.insertedId;
     } catch (e) {
         console.error(e);
         throw e;
@@ -62,21 +74,25 @@ async function addGameReview(gameData) {
 
 
 async function findGameByRating(rating) {
-    const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
+    // const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
     try {
-        await client.connect();
-        const database = client.db(databaseName);
-        const collection = database.collection(collectionName);
-
+        await mongoose.connect(uri);
         const ratingNum = parseFloat(rating);
-        const results = await collection.find({ rating: { $gte: ratingNum } }).toArray();
+        const results = await GameReview.find({rating: { $gte: ratingNum }});
+        // await client.connect();
+        // const database = client.db(databaseName);
+        // const collection = database.collection(collectionName);
+
+        // const ratingNum = parseFloat(rating);
+        // const results = await collection.find({ rating: { $gte: ratingNum } }).toArray();
         return results;
     } catch (e) {
         console.error(e);
         throw e;
     }
     finally {
-        await client.close();
+        // await client.close();
+        mongoose.disconnect();
     }
 }
 
@@ -111,7 +127,7 @@ app.post("/processReview", (request, response) => {
         review: review
     };
 
-    addGameReview(gameReview).then((id) => {
+    addGameReview(gameReview).then(() => {
         const now = new Date();
         const dateString = now.toLocaleString();
         response.render("reviewConformation", {
@@ -226,10 +242,15 @@ app.get("/removeReviews", (request, response) => {
 
 app.post("/processRemoval", async (request, response) => {
     try {
-        const results = await client.db(databaseName).collection(collectionName).deleteMany({});
+        await mongoose.connect(uri);
+        const results = await GameReview.deleteMany({});
+        // const results = await client.db(databaseName).collection(collectionName).deleteMany({});
         response.render("processRemoval", { count: results.deletedCount });
     } catch (e) {
         console.error("Error removing all reviews: ", e);
+    }
+    finally {
+        mongoose.disconnect();
     }
 });
 
