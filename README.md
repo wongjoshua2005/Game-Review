@@ -1,5 +1,5 @@
 # Game-Review
-**Submited by:** (SUBMITTER)  
+**Submitted by:** (SUBMITTER) (DIRECTORY ID)  
 **Group Members:** Joshua Wong (DIRECTORY ID), Calvin Vogan (DIRECTORY ID), Ivan Chiu (ichiu), Priscilla (LASTNAME) (DIRECTORY ID)  
 **App Description:** Allow users to create and submit reviews for video games, look up their submitted reviews, and search for video games to review.  
 **YouTube Video Link:** [https://youtube.com/OUR_VIDEO_DEMONSTRATION](https://youtube.com/OUR_VIDEO_DEMONSTRATION)  
