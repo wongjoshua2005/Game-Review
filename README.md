@@ -1,5 +1,5 @@
 # Game-Review
-**Submitted by:** Joshua Wong (jwong112)
+**Submitted by:** Joshua Wong (jwong112)  
 **Group Members:** Joshua Wong (jwong112), Calvin Vogan (cvogan), Ivan Chiu (ichiu), Priscilla Chavarria (pchavarr)  
 **App Description:** Allow users to create and submit reviews for video games, look up their submitted reviews, and search for video games to review.  
 **YouTube Video Link:** [https://youtu.be/MBRL2G7-hDs](https://youtu.be/MBRL2G7-hDs)  
