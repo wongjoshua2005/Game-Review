@@ -48,7 +48,6 @@ const RAWG_API_KEY = process.env.RAWG_API_KEY;
 const GameReview = require("./models/GameReview.js");
 
 async function addGameReview(gameData) {
-    // const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
     try {
         await mongoose.connect(uri);
         await GameReview.create({
@@ -57,12 +56,7 @@ async function addGameReview(gameData) {
             rating: gameData.rating,
             review: gameData.review
         });
-        // await client.connect();
-        // const database = client.db(databaseName);
-        // const collection = database.collection(collectionName);
 
-        // const result = await collection.insertOne(gameData);
-        // return result.insertedId;
     } catch (e) {
         console.error(e);
         throw e;
@@ -74,24 +68,16 @@ async function addGameReview(gameData) {
 
 
 async function findGameByRating(userEmail, rating) {
-    // const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
     try {
         await mongoose.connect(uri);
         const ratingNum = parseFloat(rating);
         const results = await GameReview.find({email: userEmail, rating: { $gte: ratingNum }});
-        // await client.connect();
-        // const database = client.db(databaseName);
-        // const collection = database.collection(collectionName);
-
-        // const ratingNum = parseFloat(rating);
-        // const results = await collection.find({ rating: { $gte: ratingNum } }).toArray();
         return results;
     } catch (e) {
         console.error(e);
         throw e;
     }
     finally {
-        // await client.close();
         mongoose.disconnect();
     }
 }
@@ -99,20 +85,6 @@ async function findGameByRating(userEmail, rating) {
 // To include routes to index, review, and list of reviews
 const routes = require("./routes");
 app.use("/", routes);
-
-// To render the page when first click on the link
-// app.get("/", (request, response) => {
-//     response.render("index");
-// });
-// NOW DONE IN ROUTES.JS ^
-
-// app.get("/review", (request, response) => {
-//     const variables = {
-//         destination: `http://localhost:${portNumber}/processReview`
-//     }
-//     response.render("review", variables);
-// });
-// NOW DONE IN ROUTES.JS ^
 
 app.post("/processReview", (request, response) => {
     const name = request.body.name;
@@ -141,11 +113,6 @@ app.post("/processReview", (request, response) => {
         console.error('error');
     });
 });
-
-// app.get("/listOfReviews", (request, response) => { //Calvin
-//     response.render("listReviews");
-// });
-// NOW DONE IN ROUTES.JS ^
 
 app.post("/processList", async (request, response) => { //Calvin
     const email = request.body.userEmail;
@@ -208,9 +175,6 @@ app.post("/processSearch", async (request, response) => {
         // To retrieve the data from the API result
         const rawGames = apiResp.data.results;
 
-        // To test it works and retrieve the right data
-        console.log(rawGames);
-
         // To display the full list of games from the search
         let games = [];
 
@@ -246,7 +210,6 @@ app.post("/processRemoval", async (request, response) => {
     try {
         await mongoose.connect(uri);
         const results = await GameReview.deleteMany({});
-        // const results = await client.db(databaseName).collection(collectionName).deleteMany({});
         response.render("processRemoval", { count: results.deletedCount });
     } catch (e) {
         console.error("Error removing all reviews: ", e);
