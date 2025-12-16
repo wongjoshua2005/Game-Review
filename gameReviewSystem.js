@@ -18,10 +18,10 @@ const portNumber = 3000;
 const httpSuccessStatus = 200;
 
 // To Continue Initialize MongoDB
-require("dotenv").config({
-    path: path.resolve(__dirname, "credentials/.env"),
-    quiet: true
-});
+// require("dotenv").config({
+//     path: path.resolve(__dirname, "credentials/.env"),
+//     quiet: true
+// });
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
 

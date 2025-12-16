@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
 
 router.get("/review", (req, res) => {
     res.render("review", {
-        destination: "http://localhost:3000/processReview"
+        destination: "/processReview"
     });
 });
 
